@@ -1,5 +1,6 @@
 import amqp from 'amqplib'
 import dotenv from 'dotenv'
+import './app';
 
 dotenv.config()
 
