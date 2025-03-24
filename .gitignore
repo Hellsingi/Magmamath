@@ -1,0 +1,26 @@
+# Node.js dependencies
+node_modules
+
+# Logs
+logs
+*.log
+npm-debug.log*
+
+# Build output
+dist
+build
+
+# Environment variables
+.env
+
+# IDE & editor configs
+.vscode
+.idea
+*.sublime-project
+*.sublime-workspace
+
+# Docker files
+docker-compose.override.yml
+
+# MacOS
+.DS_Store
