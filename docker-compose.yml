@@ -26,6 +26,8 @@ services:
 
   notification-service:
     build: ./notification-service
+    ports:
+      - "5001:5001"
     environment:
       - RABBITMQ_URL=amqp://rabbitmq
     depends_on:
