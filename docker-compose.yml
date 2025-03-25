@@ -1,37 +1,46 @@
 services:
-  mongo:
+  mongodb:
     image: mongo:7
+    container_name: mongodb
     ports:
-      - "27017:27017"
+      - '27017:27017'
     volumes:
-      - mongo-data:/data/db
+      - dbdata7:/data/db
+    healthcheck:
+      test: ["CMD-SHELL", "mongosh --eval 'db.runCommand({ping:1})' || exit 1"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
 
   rabbitmq:
     image: rabbitmq:3-management
+    container_name: rabbitmq
     ports:
       - "5672:5672"
       - "15672:15672"
 
   user-service:
     build: ./user-service
+    container_name: user-service
     ports:
       - "4000:4000"
     environment:
       - PORT=4000
-      - MONGO_URI=mongodb://mongo:27017/usersdb
+      - MONGO_URI=mongodb://mongodb:27017/usersdb
       - RABBITMQ_URL=amqp://rabbitmq
     depends_on:
-      - mongo
-      - rabbitmq
+      mongodb:
+        condition: service_healthy
+      rabbitmq:
+        condition: service_started
 
-  notification-service:
-    build: ./notification-service
-    ports:
-      - "5001:5001"
-    environment:
-      - RABBITMQ_URL=amqp://rabbitmq
-    depends_on:
-      - rabbitmq
-
+  # notification-service:
+  #   build: ./notification-service
+  #   ports:
+  #     - "5001:5001"
+  #   environment:
+  #     - RABBITMQ_URL=amqp://rabbitmq
+  #   depends_on:
+  #     - rabbitmq
 volumes:
-  mongo-data:
+  dbdata7:
