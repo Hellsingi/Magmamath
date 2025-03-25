@@ -1,7 +1,8 @@
 import dotenv from 'dotenv';
-import { listenForMessages } from './consumer';
+import logger from './utils/logger';
+import { consumeMessages } from './consumer';
 import './healthCheck';
 
 dotenv.config();
 
-listenForMessages().catch(console.error);
+consumeMessages().catch(logger.error);

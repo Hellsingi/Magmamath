@@ -2,6 +2,7 @@ import { Request, Response, NextFunction, RequestHandler } from 'express';
 import { User } from '../models/userModel';
 import { validateUser } from '../utils/validation';
 import logger from '../utils/logger';
+import { publishEvent } from '../utils/publisher';
 
 export const createUser = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
   try {
@@ -15,6 +16,7 @@ export const createUser = async (req: Request, res: Response, next: NextFunction
 
     const user = new User(req.body);
     await user.save();
+    await publishEvent('USER_CREATED', user);
 
     res.status(201).json(user);
   } catch (err) {
@@ -76,6 +78,7 @@ export const deleteUser = async (req: Request, res: Response, next: NextFunction
       res.status(404).send('User not found');
       return;
     }
+    await publishEvent('USER_DELETED', user);
     res.send(user);
   } catch (err) {
     next(err);
